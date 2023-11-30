@@ -13,6 +13,25 @@ def writeScore(score):
     txt = myfont.render("points : " + str(score), True, (255 - r, 255 - g, 255 - b))
     monitor.blit(txt, (10, sheight - 40))
 
+# 기능 @@@@@ : 재시작버튼
+def showRetryScreen():
+    retryFont = pygame.font.SysFont('Arial', 50)
+    retryText = retryFont.render("Retry?", True, (255, 255, 255))
+    retryRect = retryText.get_rect(center=(swidth / 2, sheight / 2))
+    monitor.blit(retryText, retryRect)
+
+    pygame.display.update()
+
+    waitingForRetry = True
+    while waitingForRetry:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    playGame()
+                    waitingForRetry = False
 
 def playGame(mons=None):
     global monitor, ship, monster, missile
@@ -137,8 +156,7 @@ def playGame(mons=None):
         # @기능 6-1 : 우주선과 우주괴물이 충돌했는지 체크한다.
         if (monsterX < shipX < monsterX + monsterSize[0]) and \
                 (monsterY < shipY < monsterY + monsterSize[1]):
-            pygame.quit()
-            sys.exit()  # 게임 종료
+            showRetryScreen()
 
         # @기능 5-3 : 점수를 화면에 쓰는 함수를 호출한다.
         writeScore(fireCount)
